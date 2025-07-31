@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光伏未来战略 - 3D技能卡牌</title>
+    <style>
+        :root {
+            --neon-blue: #00f7ff;
+            --neon-purple: #b400ff;
+            --neon-cyan: #00ffd4;
+            --neon-yellow: #ffd700;
+            --neon-pink: #ff00ff;
+            --neon-green: #00ff88;
+            --dark-bg: #0a0a0f;
+            --card-bg: rgba(15, 15, 25, 0.9);
+            --glow: 0 0 20px;
+            --holographic-gradient: linear-gradient(135deg,
+                    rgba(0, 247, 255, 0.8) 0%,
+                    rgba(180, 0, 255, 0.8) 25%,
+                    rgba(255, 0, 255, 0.8) 50%,
+                    rgba(0, 255, 212, 0.8) 75%,
+                    rgba(0, 247, 255, 0.8) 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Rajdhani', 'Orbitron', sans-serif;
+            background-color: #ffffff00;
+            color: white;
+            min-height: 100vh;
+            overflow: hidden;
+            perspective: 1000px;
+
+        }
+
+
+
+        @keyframes gridMove {
+            0% {
+                transform: translate(0, 0);
+            }
+
+            100% {
+                transform: translate(60px, 60px);
+            }
+        }
+
+        .container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            /* flex-direction: column; */
+            justify-content: center;
+            align-items: center;
+            z-index: 2;
+        }
+
+
+
+        #drag-container {
+            position: relative;
+            width: 100vw;
+            height: 100%;
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transform-style: preserve-3d;
+            transform: rotateX(-15deg);
+        }
+
+        #spin-container {
+            position: relative;
+            width: 250px;
+            height: 375px;
+            transform-style: preserve-3d;
+            animation: spin 40s infinite linear;
+        }
+
+        @keyframes spin {
+            from {
+                transform: rotateY(0deg);
+            }
+
+            to {
+                transform: rotateY(360deg);
+            }
+        }
+
+        .card {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            border-radius: 20px;
+            overflow: hidden;
+            cursor: pointer;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(0, 247, 255, 0.3);
+            box-shadow:
+                0 0 20px rgba(0, 247, 255, 0.3),
+                inset 0 0 20px rgba(0, 247, 255, 0.1);
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--holographic-gradient);
+            opacity: 0;
+            transition: opacity 0.6s ease;
+            z-index: -1;
+        }
+
+        .card:hover {
+            transform: translateY(-30px) scale(1.15) rotateY(0deg);
+            box-shadow:
+                0 0 50px rgba(0, 247, 255, 0.8),
+                0 0 80px rgba(180, 0, 255, 0.6),
+                0 0 100px rgba(255, 0, 255, 0.4),
+                inset 0 0 40px rgba(0, 247, 255, 0.3);
+            border-color: rgba(0, 247, 255, 1);
+            border-width: 3px;
+        }
+
+        .card:hover::before {
+            opacity: 0.3;
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 25px;
+            box-sizing: border-box;
+            background: var(--card-bg);
+            border-radius: 18px;
+        }
+
+        .card-back {
+            transform: rotateY(180deg);
+            background: linear-gradient(135deg, rgba(10, 10, 15, 0.9), rgba(20, 20, 30, 0.95));
+        }
+
+        .card-icon {
+            font-size: 5rem;
+            margin-bottom: 1.5rem;
+            background: var(--holographic-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 10px rgba(0, 247, 255, 0.8));
+            animation: iconFloat 3s ease-in-out infinite;
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .card:hover .card-icon {
+            font-size: 5.5rem;
+            filter: drop-shadow(0 0 20px rgba(0, 247, 255, 1)) drop-shadow(0 0 30px rgba(180, 0, 255, 0.8));
+            animation: iconFloat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes iconFloat {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: white;
+            text-shadow:
+                0 0 15px rgba(0, 247, 255, 0.8),
+                0 0 30px rgba(180, 0, 255, 0.6);
+            transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .card:hover .card-title {
+            font-size: 2rem;
+            text-shadow:
+                0 0 20px rgba(0, 247, 255, 1),
+                0 0 40px rgba(180, 0, 255, 0.8),
+                0 0 60px rgba(255, 0, 255, 0.6);
+            color: var(--neon-blue);
+        }
+
+        .card-desc {
+            font-size: 1.2rem;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.9);
+            line-height: 1.6;
+            text-shadow: 0 0 5px rgba(0, 247, 255, 0.5);
+        }
+
+        .card-name-tag {
+            position: absolute;
+            top: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(10, 10, 15, 0.95);
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--neon-blue);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow:
+                0 0 20px rgba(0, 247, 255, 0.4),
+                inset 0 0 10px rgba(0, 247, 255, 0.2);
+            border: 2px solid rgba(0, 247, 255, 0.5);
+            white-space: nowrap;
+            text-transform: uppercase;
+            backdrop-filter: blur(10px);
+        }
+
+        .card:hover .card-name-tag {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+        }
+
+        .info-panel {
+            position: absolute;
+            right: 50%;
+            top: 30%;
+            transform: translate(50%, -50%);
+            width: 1000px;
+            background: rgba(10, 10, 15, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 40px;
+            border: 3px solid var(--neon-purple);
+            box-shadow:
+                0 0 40px rgba(180, 0, 255, 0.4),
+                inset 0 0 30px rgba(180, 0, 255, 0.2);
+            opacity: 0;
+            transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 5;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .info-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--holographic-gradient);
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .info-panel::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(180, 0, 255, 0.1), transparent);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
+        }
+
+        .panel-corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--neon-purple);
+        }
+
+        .panel-corner.top-left {
+            top: 10px;
+            left: 10px;
+            border-right: none;
+            border-bottom: none;
+        }
+
+        .panel-corner.top-right {
+            top: 10px;
+            right: 10px;
+            border-left: none;
+            border-bottom: none;
+        }
+
+        .panel-corner.bottom-left {
+            bottom: 10px;
+            left: 10px;
+            border-right: none;
+            border-top: none;
+        }
+
+        .panel-corner.bottom-right {
+            bottom: 10px;
+            right: 10px;
+            border-left: none;
+            border-top: none;
+        }
+
+        .panel-status-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--neon-blue), var(--neon-purple), var(--neon-cyan));
+            animation: statusBarFlow 3s linear infinite;
+        }
+
+        @keyframes statusBarFlow {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .info-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: var(--holographic-gradient);
+            opacity: 0.1;
+            z-index: -1;
+        }
+
+        .info-panel::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(from 0deg, transparent, rgba(180, 0, 255, 0.1), transparent);
+            animation: rotate 10s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .info-panel.active {
+            transform: translate(50%, -50%) translateX(0);
+            opacity: 1;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid rgba(180, 0, 255, 0.3);
+        }
+
+        .panel-icon {
+            font-size: 3rem;
+            margin-right: 15px;
+            background: var(--holographic-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            filter: drop-shadow(0 0 15px rgba(180, 0, 255, 0.8));
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: var(--holographic-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-shadow: 0 0 15px rgba(180, 0, 255, 0.8);
+        }
+
+        .panel-subtitle {
+            font-size: 1.4rem;
+            color: var(--neon-cyan);
+            margin-bottom: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            padding: 10px 15px;
+            background: rgba(0, 255, 212, 0.1);
+            border-radius: 10px;
+            border-left: 4px solid var(--neon-cyan);
+        }
+
+        .panel-subtitle::before {
+            content: '⚡';
+            margin-right: 12px;
+            filter: drop-shadow(0 0 8px var(--neon-cyan));
+            font-size: 1.1rem;
+        }
+
+        .panel-content {
+            font-size: 1.3rem;
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.9);
+            margin-bottom: 1.8rem;
+            padding: 15px;
+            background: rgba(0, 247, 255, 0.05);
+            border-radius: 10px;
+            border: 1px solid rgba(0, 247, 255, 0.2);
+        }
+
+        .panel-effect {
+            font-size: 1.2rem;
+            background: rgba(255, 215, 0, 0.1);
+            border: 2px solid var(--neon-yellow);
+            padding: 20px;
+            border-radius: 15px;
+            margin-top: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-effect::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg,
+                    rgba(255, 215, 0, 0.05) 0%,
+                    rgba(255, 215, 0, 0.15) 50%,
+                    rgba(255, 215, 0, 0.05) 100%);
+            z-index: -1;
+        }
+
+        .effect-title {
+            color: var(--neon-yellow);
+            font-weight: 700;
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            font-size: 1.3rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .effect-title::before {
+            content: '🔥';
+            margin-right: 10px;
+            filter: drop-shadow(0 0 8px var(--neon-yellow));
+            font-size: 1.2rem;
+        }
+
+
+
+        .rarity-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 12px;
+            background: linear-gradient(135deg, var(--neon-yellow), var(--neon-pink));
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--dark-bg);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.5);
+        }
+
+        .back-btn {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 15px 40px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            background: transparent;
+            color: var(--neon-blue);
+            border: 3px solid var(--neon-blue);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            box-shadow:
+                0 0 25px var(--neon-blue),
+                inset 0 0 15px var(--neon-blue);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 10;
+            backdrop-filter: blur(10px);
+        }
+
+        .back-btn:hover {
+            color: var(--dark-bg);
+            background: var(--neon-blue);
+            box-shadow:
+                0 0 35px var(--neon-blue),
+                inset 0 0 20px var(--neon-blue);
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        .back-btn.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .card.selected {
+            transform: translateX(-400px) translateZ(150px) rotateY(0deg) scale(1.2);
+            transition: all 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            z-index: 20;
+        }
+
+        .card.selected::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: -10px;
+            right: -10px;
+            bottom: -10px;
+            background: var(--holographic-gradient);
+            border-radius: 25px;
+            z-index: -1;
+            animation: selectedGlow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes selectedGlow {
+            0% {
+                opacity: 0.3;
+                transform: scale(1);
+            }
+
+            100% {
+                opacity: 0.6;
+                transform: scale(1.05);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .info-panel {
+                width: 90%;
+                right: 50%;
+                top: 50%;
+                transform: translate(50%, -50%) translateX(100px);
+                padding: 25px;
+            }
+
+            .info-panel.active {
+                transform: translate(50%, -50%) translateX(0);
+            }
+
+            .panel-title {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cyber-grid"></div>
+
+    <div class="container">
+
+        <div id="drag-container">
+            <div id="spin-container">
+                <!-- 卡牌将通过JavaScript动态生成 -->
+            </div>
+        </div>
+
+        <div class="info-panel" id="infoPanel">
+            <!-- 信息面板内容将通过JavaScript动态生成 -->
+        </div>
+
+        <button class="back-btn" id="backBtn">返回卡牌轮盘</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // 卡牌数据
+            const cards = [
+                {
+                    id: 'shield',
+                    title: '政策护盾',
+                    fullTitle: '政策护盾：全方位守护',
+                    icon: '🛡️',
+                    desc: '全方位守护光伏产业发展',
+                    name: '政策扶持护盾',
+                    function: '从法律层面锁定"全额收购可再生能源电力"，让光伏电不愁销路。还推行"多退少补"机制，让企业收益与市场挂钩，更有针对性地解决弃电和贸易壁垒问题。',
+                    effect: '西藏那曲光伏电站因"源网荷储"一体化政策，弃电率从31.4%直降至15%；2024年，40%的中国光伏组件经东南亚转口，成功绕开美国关税壁垒。同时，光伏扶贫政策让河北阜平贫困户年均增收3000元，成为他们的"阳光存折"。'
+                },
+                {
+                    id: 'chip',
+                    title: 'AI加速芯片',
+                    fullTitle: 'AI加速芯片：效率飙升',
+                    icon: '💾',
+                    desc: '效率飙升的智能解决方案',
+                    name: 'AI智能加速芯片',
+                    function: '为光伏运维和并网赋能。',
+                    effect: '在青海光伏电站，华为AI视觉识别系统将组件故障检出率从70%提升到98%；南方电网深圳利用AI负荷预测模型，使电网接纳光伏电能力提升35%，浙江分布式光伏并网等待时间从60天缩至7天。在细节优化上，海博思创算法让光伏功率预测精度达92%，储能电站收益涨25%；协鑫科技AI质检把硅片缺陷检出率做到99.9%，每片硅片成本降3分钱。'
+                },
+                {
+                    id: 'skill',
+                    title: '企业技能树',
+                    fullTitle: '企业技能树：强势升级',
+                    icon: '🌳',
+                    desc: '强势升级的技术与协作',
+                    name: '技术革新与协同共生',
+                    function: '加大企业研发投入，企业间联合制定自律公约，不再打价格战，而是携手开拓市场，聚焦细分领域，共同做精技术、做大市场。',
+                    effect: '隆基绿能投入200亿元研发HJT电池，转换效率突破27%，发电量比传统电池多10%；阳光电源专注"光伏+储能"系统，产品畅销150个国家，在沙特让弃电率从20%降至5%。'
+                },
+                {
+                    id: 'energy',
+                    title: '民众能量核心',
+                    fullTitle: '民众能量核心：汇聚希望',
+                    icon: '⚡',
+                    desc: '汇聚希望的全民力量',
+                    name: '民众支持能量核心',
+                    function: '民众支持是光伏发展最强大的能量来源。民众的力量，源源不断地为光伏发展注入能量。',
+                    effect: '甘肃下岗女工党菊珍27年跑遍100多个村庄，助力偏远牧区用上光伏电；上海退休教师王阿姨通过抖音科普光伏知识；95后工程师小林扎根新疆光伏基地，借助AI巡检机器人将运维效率提高3倍。'
+                }
+            ];
+
+            const spinContainer = document.getElementById('spin-container');
+            const infoPanel = document.getElementById('infoPanel');
+            const backBtn = document.getElementById('backBtn');
+            const dragContainer = document.getElementById('drag-container');
+
+            let isCardSelected = false;
+            let selectedCard = null;
+            let originalTransform = '';
+
+            // 创建卡牌
+            function createCards() {
+                spinContainer.innerHTML = '';
+
+                cards.forEach((card, index) => {
+                    const cardElement = document.createElement('div');
+                    cardElement.className = 'card';
+                    cardElement.id = card.id;
+
+                    // 计算卡牌位置 (3D圆形排列，统一正面朝向)
+                    const angle = (index / cards.length) * Math.PI * 2;
+                    const radius = 400; // 增大半径，让卡牌离边缘更远
+                    const xPos = Math.sin(angle) * radius;
+                    const zPos = -Math.cos(angle) * radius;
+
+                    // 让所有卡牌正面朝向中心，但AI加速芯片和民众能量核心需要翻转
+                    let faceAngle = angle + Math.PI;
+                    if (card.id === 'chip' || card.id === 'energy') {
+                        faceAngle += Math.PI; // 翻转180度
+                    }
+                    cardElement.style.transform = `translateX(${xPos}px) translateZ(${zPos}px) rotateY(${faceAngle}rad)`;
+
+                    // 卡牌正面
+                    const cardFront = document.createElement('div');
+                    cardFront.className = 'card-front';
+                    cardFront.innerHTML = `
+                        <div class="card-icon">${card.icon}</div>
+                        <h3 class="card-title">${card.title}</h3>
+                        <p class="card-desc">${card.desc}</p>
+                    `;
+
+                    // 卡牌背面
+                    const cardBack = document.createElement('div');
+                    cardBack.className = 'card-back';
+                    cardBack.innerHTML = `
+                        <h3 class="card-title">${card.title}</h3>
+                        <p class="card-desc">${card.desc}</p>
+                    `;
+
+                    // 卡牌名称标签
+                    const nameTag = document.createElement('div');
+                    nameTag.className = 'card-name-tag';
+                    nameTag.textContent = card.fullTitle;
+
+                    cardElement.appendChild(cardFront);
+                    cardElement.appendChild(cardBack);
+                    cardElement.appendChild(nameTag);
+                    spinContainer.appendChild(cardElement);
+
+                    // 添加点击事件
+                    cardElement.addEventListener('click', () => selectCard(card, cardElement));
+                });
+            }
+
+            // 选择卡牌
+            function selectCard(card, cardElement) {
+                if (isCardSelected) return;
+
+                isCardSelected = true;
+                selectedCard = cardElement;
+                originalTransform = cardElement.style.transform;
+
+                // 停止旋转动画
+                spinContainer.style.animationPlayState = 'paused';
+
+                // 添加选中类名，触发入场动画
+                cardElement.classList.add('selected');
+
+                // 更新信息面板
+                infoPanel.innerHTML = `
+                    <div class="panel-status-bar"></div>
+                    <div class="panel-corner top-left"></div>
+                    <div class="panel-corner top-right"></div>
+                    <div class="panel-corner bottom-left"></div>
+                    <div class="panel-corner bottom-right"></div>
+                    <div class="panel-header">
+                        <div class="panel-icon">${card.icon}</div>
+                        <h2 class="panel-title">${card.fullTitle}</h2>
+                    </div>
+                    <div class="panel-subtitle">【名称】${card.name}</div>
+                    <div class="panel-content">
+                        <div class="panel-subtitle">【功能介绍】</div>
+                        <p>${card.function}</p>
+                    </div>
+                    <div class="panel-effect">
+                        <div class="effect-title">【使用效果】</div>
+                        <p>${card.effect}</p>
+                    </div>
+                    <div class="rarity-badge">传说</div>
+                `;
+
+                // 显示信息面板和返回按钮
+                setTimeout(() => {
+                    infoPanel.classList.add('active');
+                    backBtn.classList.add('active');
+                }, 300);
+
+                // 其他卡牌淡出
+                document.querySelectorAll('.card').forEach(cardEl => {
+                    if (cardEl.id !== card.id) {
+                        cardEl.style.opacity = '0.3';
+                        cardEl.style.pointerEvents = 'none';
+                        cardEl.style.transform += ' scale(0.8)';
+                    }
+                });
+            }
+
+            // 返回卡牌轮盘
+            function backToCarousel() {
+                if (!isCardSelected) return;
+
+                // 移除选中类名
+                selectedCard.classList.remove('selected');
+
+                // 恢复选中卡牌位置
+                selectedCard.style.transition = 'all 1s cubic-bezier(0.68, -0.55, 0.265, 1.55)';
+                selectedCard.style.transform = originalTransform;
+                selectedCard.style.zIndex = '';
+
+                // 隐藏信息面板和返回按钮
+                infoPanel.classList.remove('active');
+                backBtn.classList.remove('active');
+
+                // 恢复其他卡牌
+                document.querySelectorAll('.card').forEach(cardEl => {
+                    cardEl.style.opacity = '1';
+                    cardEl.style.pointerEvents = 'all';
+                    cardEl.style.transform = cardEl.style.transform.replace(' scale(0.8)', '');
+                });
+
+                // 重新开始旋转动画
+                setTimeout(() => {
+                    spinContainer.style.animationPlayState = 'running';
+                }, 1000);
+
+                isCardSelected = false;
+                selectedCard = null;
+            }
+
+            // 初始化
+            createCards();
+            backBtn.addEventListener('click', backToCarousel);
+
+            // 添加鼠标拖拽旋转效果
+            let isDragging = false;
+            let startX, startY;
+            let rotationX = -15;
+            let rotationY = 0;
+
+            dragContainer.addEventListener('mousedown', (e) => {
+                if (isCardSelected) return;
+
+                isDragging = true;
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+
+            document.addEventListener('mousemove', (e) => {
+                if (!isDragging || isCardSelected) return;
+
+                const deltaX = e.clientX - startX;
+                const deltaY = e.clientY - startY;
+
+                rotationY += deltaX * 0.2;
+                rotationX = Math.max(-30, Math.min(10, rotationX - deltaY * 0.1));
+
+                dragContainer.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+                startX = e.clientX;
+                startY = e.clientY;
+            });
+
+            document.addEventListener('mouseup', () => {
+                isDragging = false;
+            });
+
+            // 触摸设备支持
+            dragContainer.addEventListener('touchstart', (e) => {
+                if (isCardSelected) return;
+
+                isDragging = true;
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                e.preventDefault();
+            });
+
+            document.addEventListener('touchmove', (e) => {
+                if (!isDragging || isCardSelected) return;
+
+                const deltaX = e.touches[0].clientX - startX;
+                const deltaY = e.touches[0].clientY - startY;
+
+                rotationY += deltaX * 0.2;
+                rotationX = Math.max(-30, Math.min(10, rotationX - deltaY * 0.1));
+
+                dragContainer.style.transform = `rotateX(${rotationX}deg) rotateY(${rotationY}deg)`;
+
+                startX = e.touches[0].clientX;
+                startY = e.touches[0].clientY;
+                e.preventDefault();
+            });
+
+            document.addEventListener('touchend', () => {
+                isDragging = false;
+            });
+        });
+    </script>
+</body>
+
+</html>

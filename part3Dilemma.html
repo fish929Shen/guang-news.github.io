@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>困境</title>
+    <style>
+        body {
+            height: auto;
+            width: 100%;
+            position: relative;
+            /* 为背景网格添加定位上下文 */
+            overflow-x: hidden;
+        }
+
+        /* 背景网格容器 */
+        .grid-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            /* 确保在内容下方 */
+            pointer-events: none;
+            /* 允许鼠标穿透到下方内容 */
+        }
+
+        /* 网格单元格样式 */
+        .grid-cell {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            box-sizing: border-box;
+            border: 1px solid rgba(5, 217, 232, 0.1);
+            transition: border-color 0.3s ease;
+        }
+
+        /* 激活状态的网格单元格 */
+        .grid-cell.active {
+            border-color: rgba(5, 217, 232, 0.5);
+            animation: fadeOut 1s forwards;
+        }
+
+        /* 淡出动画 */
+        @keyframes fadeOut {
+            to {
+                border-color: rgba(5, 217, 232, 0.1);
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/index3.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+
+<body>
+    <!-- 背景网格 -->
+    <div class="grid-background" id="gridBackground"></div>
+
+    <div class="logo-container">
+        <img src="img/logo.png" alt="网站Logo" class="logo" id="logo">
+        <div class="logo-menu">
+
+            <div class="menu-item"><a href="part1Embarkation.html">启程</a></div>
+            <div class="menu-item"><a href="part2Dawn.html">曙光</a></div>
+            <div class="menu-item"><a href="part3Dilemma.html"
+                    style="color: rgb(248, 232, 207);text-shadow: 0 0 8px rgba(255, 255, 255, 0.92)">困境</a></div>
+            <div class="menu-item"><a href="part4Breakthrough.html">突围</a></div>
+        </div>
+    </div>
+    <!-- 白场过渡 -->
+    <div class="loading"> </div>
+    <!-- 正文 -->
+    <div class="content">
+        <!-- 头页 -->
+        <div class="head">
+            <img src="./img/3.png" alt="困境">
+        </div>
+        <!-- 开头的文字引入 -->
+        <div class="income-text">
+            <div class="text1">
+                <p>光伏发展的内忧外患</p>
+            </div>
+            <div class="text2">
+                <img src="./img/part3-bg1.png" alt="拳头">
+                <img src="./img/part3-bg2.png" alt="">
+
+                <p style="text-shadow: 0 0 30px rgba(255, 255, 255, 0.614);">当美国的关税大棒再度袭来时，光晟才发现自己低估了这条路的艰险。</p>
+            </div>
+        </div>
+        <!-- BOSS卡片 -->
+        <div class="cyber-effect">
+            <div class="grid-lines"></div>
+            <div class="particles" id="particles"></div>
+        </div>
+
+        <div class="container">
+            <!-- 导航栏 -->
+            <div class="nav-bar">
+                <div class="nav-icon active" data-section="misunderstanding">
+                    <i class="fas fa-question"></i>
+                </div>
+                <div class="nav-icon" data-section="abandoned-power">
+                    <i class="fas fa-bolt"></i>
+                </div>
+                <div class="nav-icon" data-section="industry">
+                    <i class="fas fa-industry"></i>
+                </div>
+                <div class="nav-icon" data-section="hegemony">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+            </div>
+
+            <!-- 主内容区 -->
+            <div class="main-content">
+                <!-- 顶部区域 -->
+                <div class="top-section">
+                    <div class="info-panel">
+                        <div class="difficulty">
+                            <span class="difficulty-label">难度系数：</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">☆</span>
+                            <span class="star">☆</span>
+                            <span class="star">☆</span>
+                        </div>
+                        <h1 class="title">认知壁垒：从误解到接纳的距离</h1>
+                    </div>
+                    <div class="weapon-panel">
+                        <div class="weapon-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <div class="weapon-tooltip">
+                            光伏扶贫政策让河北阜平的贫困户屋顶变成"阳光存折"，每户年均增收3000元。
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 内容区域 -->
+                <div class="content-section">
+                    <p class="content-text">
+                        在光伏产业发展的初期，公众对这项技术的认知存在诸多误解。许多人认为光伏发电效率低下、成本高昂，难以大规模应用。然而，随着技术进步和政策支持，光伏发电的成本已从2010年的每瓦30元降至2023年的每瓦1.5元，降幅达95%。效率方面，主流光伏组件的转换效率从15%提升至23%，叠层电池实验室效率更是突破33%。这些数据有力驳斥了早期的认知误区。
+                    </p>
+                </div>
+            </div>
+            <!-- 导航箭头 -->
+            <div class="nav-arrow up">
+                <i class="fas fa-chevron-up"></i>
+            </div>
+            <div class="nav-arrow down">
+                <i class="fas fa-chevron-down"></i>
+            </div>
+        </div>
+
+
+
+        <div style="height: 50vh;"></div>
+    </div>
+
+
+    </div>
+
+    <script>
+        // 文字和图片动画效果
+        document.addEventListener('DOMContentLoaded', function () {
+            const text1 = document.querySelector('.text1');
+            const text2 = document.querySelector('.text2');
+            const text1P = document.querySelector('.text1 p');
+            const text2P = document.querySelector('.text2 p');
+            const text2Imgs = document.querySelectorAll('.text2 img');
+
+
+
+
+
+
+            //卡片的开始
+            // 创建粒子效果
+            createParticles();
+
+            // 定义所有卡片数据
+            const cards = [
+                {
+                    id: "misunderstanding",
+                    title: "认知壁垒：从误解到接纳的距离",
+                    difficulty: 2,
+                    weaponIcon: "fas fa-shield-alt",
+                    weaponTooltip: "光伏扶贫政策让河北阜平的贫困户屋顶变成'阳光存折'，每户年均增收3000元。",
+                    content: {
+                        type: "iframe",  // 修改类型为iframe
+                        src: "./part4-danmu.html",  // 指定iframe源文件
+                        text: "中国某些农村至今还流传着'光伏致癌'的小道消息；原本的戈壁和盐碱滩却被造谣为'光伏致寸草不生'的荒地......看似荒唐的指控，源于人们对未知的光伏的恐惧。怎样打破光伏认知壁垒，让大众接纳，这是全球面临的共同课题。"
+                    }
+                },
+                {
+                    id: "abandoned-power",
+                    title: "弃电难题：消纳困境与储能突破",
+                    difficulty: 3,
+                    weaponIcon: "fas fa-project-diagram",
+                    weaponTooltip: "2022年'源网荷储'一体化政策推动光伏与储能绑定，西藏那曲的光伏电站通过配套储能，弃电率从31.4%降至15%。2022年《'十四五'新型储能发展实施方案》鼓励光伏项目配套储能，提出'源网荷储'一体化发展，支持分布式光伏与储能结合。新型储能参与电力辅助服务市场，提升电网调节能力。",
+                    content: {
+                        type: "text-image",
+                        text: "光伏弃电核心是'太阳照常升起，用电却在远方'的矛盾。   解决电发得多、用得少或送不出去的问题主要有两个办法，不过都存在困难：通过建特高压线路把电送出去，但每公里造价超1亿元，建设周期5年。而用锂电池把多余的电存起来，存一度电的成本在0.11-0.38元，光伏电的综合成本就涨了30%，但现在的电价机制还不能完全覆盖这些额外成本。     这些瓶颈，让光伏陷入'越建越亏'的怪圈。",
+                        image: "./img/part4-nav2.png"
+                    }
+                },
+                {
+                    id: "industry",
+                    title: "光伏行业冰火两重天",
+                    difficulty: 3,
+                    weaponIcon: "fas fa-shield-alt",
+                    weaponTooltip: "2025年《新能源上网电价市场化改革》推开'多退少补'机制，企业收益预期从'看补贴脸色'转向'靠市场说话'。",
+                    content: {
+                        type: "split",
+                        left: "2021年'双碳'政策启动，光伏行业迎来爆发式增长。'五大六小'集团竞逐新能源项目，带动产业链投资热潮，吸引跨界资本涌入。<br><br>然而，企业间竞争引发市场结构性过剩，光伏行业在2024年迎来'寒冬'。",
+                        right: "./part4-nav3.html"
+                    }
+                },
+                {
+                    id: "hegemony",
+                    title: "霸权围剿：贸易壁垒与技术封锁",
+                    difficulty: 5,
+                    weaponIcon: "fas fa-shield-alt",
+                    weaponTooltip: "商务部联合东南亚国家搭建'绿色贸易走廊'，2024年中国光伏组件经东南亚转口的占比提升至40%，绕开贸易壁垒的同时，带动当地光伏产业链升级。",
+                    content: {
+                        type: "image-text",
+                        background: "./img/part4-nav4.png",
+                        left: "在光伏出海路途中，光晟一行人遇到了争夺光伏的劲敌——美国。\n\n     近年来，美国大肆宣称中国政府补贴导致光伏等新能源领域产能过剩，中方为消化这些过剩产能，以所谓低价在海外销售导致市场扭曲，损害他国经济。\n\n     但根据国际能源署（IEA）测算，2030年，全球光伏新增装机需求将达到8.2亿千瓦，约是2022年的4倍，光伏等优质产能实则供不应求。\n\n2025年4月，特朗普再度肆意挥舞双反大棒，对东南亚光伏产品筑起'小院高墙'，最高关税高达3500%，其实际目标直指在全球新能源市场一骑绝尘的中国企业。\n\n美国所谓的'产业过剩论'，本质是贸易保护主义的借口。一方面试图将中国锁定在产业链低端，另一方面为自身新能源产业发展'筑墙'。这种做法，不仅阻碍全球绿色转型进程，更违背了'能源危机需要全球协作'的基本共识。",
+                        right: "./img/part4-nav4-2.png"
+                    }
+                }
+            ];
+
+            // 获取DOM元素
+            const navIcons = document.querySelectorAll('.nav-icon');
+            const titleElement = document.querySelector('.title');
+            const difficultyElement = document.querySelector('.difficulty');
+            const weaponIconElement = document.querySelector('.weapon-icon i');
+            const weaponTooltipElement = document.querySelector('.weapon-tooltip');
+            const contentTextElement = document.querySelector('.content-text');
+            const upArrow = document.querySelector('.nav-arrow.up');
+            const downArrow = document.querySelector('.nav-arrow.down');
+
+            let currentIndex = 0;
+
+            // 更新卡片内容
+            function updateCard(index) {
+                const card = cards[index];
+
+                // 更新导航图标状态
+                navIcons.forEach((icon, i) => {
+                    if (i === index) {
+                        icon.classList.add('active');
+                    } else {
+                        icon.classList.remove('active');
+                    }
+                });
+
+                // 更新标题
+                titleElement.textContent = card.title;
+
+                // 更新难度星级
+                difficultyElement.innerHTML = '';
+                const difficultyLabel = document.createElement('span');
+                difficultyLabel.className = 'difficulty-label';
+                difficultyLabel.textContent = '难度系数：';
+                difficultyElement.appendChild(difficultyLabel);
+
+                for (let i = 0; i < 5; i++) {
+                    const star = document.createElement('span');
+                    star.className = 'star';
+                    star.textContent = i < card.difficulty ? '★' : '☆';
+                    difficultyElement.appendChild(star);
+                }
+
+                // 更新武器图标和提示
+                weaponIconElement.className = card.weaponIcon;
+                weaponTooltipElement.textContent = card.weaponTooltip;
+
+                // 清空内容区域
+                contentTextElement.innerHTML = '';
+
+                // 根据内容类型创建不同的布局
+                switch (card.content.type) {
+                    case "iframe":  // 添加iframe类型的处理
+                        createIframeContent(card.content);
+                        break;
+                    case "text-image":
+                        createTextImageContent(card.content);
+                        break;
+                    case "split":
+                        createSplitContent(card.content);
+                        break;
+                    case "image-text":
+                        createImageTextContent(card.content);
+                        break;
+                }
+            }
+            // content中的特殊布局
+            // 添加新的createIframeContent函数
+            function createIframeContent(content) {
+                const container = document.createElement('div');
+                container.className = 'iframe-container';
+
+                // 创建iframe
+                const iframe = document.createElement('iframe');
+                iframe.src = content.src;
+                iframe.className = 'content-iframe';
+                iframe.style.height = '400px'; // 设置合适的高度
+                iframe.style.marginBottom = '20px';
+
+                // 创建下方文本
+                const textElement = document.createElement('p');
+                textElement.className = 'content-text';
+                textElement.innerHTML = content.text.replace(/\n/g, '<br>');
+
+                container.appendChild(iframe);
+                container.appendChild(textElement);
+                contentTextElement.appendChild(container);
+            }
+            // 创建文本+图片内容
+            function createTextImageContent(content) {
+                const container = document.createElement('div');
+                container.className = 'text-image-container';
+
+                const textElement = document.createElement('p');
+                textElement.className = 'content-text';
+                textElement.textContent = content.text.replace(/\n/g, '<br>');
+
+                const imageElement = document.createElement('img');
+                imageElement.src = content.image;
+                imageElement.alt = "光伏弃电解决方案";
+                imageElement.style.maxWidth = '100%';
+                imageElement.style.marginTop = '20px';
+                imageElement.style.borderRadius = '8px';
+
+                container.appendChild(textElement);
+                container.appendChild(imageElement);
+                contentTextElement.appendChild(container);
+            }
+
+            // 创建左右分栏内容
+            function createSplitContent(content) {
+                const splitContainer = document.createElement('div');
+                splitContainer.className = 'split-layout';
+
+                const leftDiv = document.createElement('div');
+                leftDiv.className = 'split-left';
+                leftDiv.innerHTML = `<p class="content-text">${content.left.replace(/\n/g, '<br>')}</p>`;
+
+                const rightDiv = document.createElement('div');
+                rightDiv.className = 'split-right';
+                const iframe = document.createElement('iframe');
+                iframe.className = 'content-iframe';
+                iframe.src = content.right;
+
+                rightDiv.appendChild(iframe);
+                splitContainer.appendChild(leftDiv);
+                splitContainer.appendChild(rightDiv);
+                contentTextElement.appendChild(splitContainer);
+            }
+
+            // 创建图片背景+文字内容
+            function createImageTextContent(content) {
+                const container = document.createElement('div');
+                container.className = 'hegemony-content';
+
+                // 创建文本部分
+                const textDiv = document.createElement('div');
+                textDiv.className = 'hegemony-text';
+                textDiv.innerHTML = `<p class="content-text">${content.left.replace(/\n/g, '<br>')}</p>`;
+
+                // 创建图片部分
+                const imageDiv = document.createElement('div');
+                imageDiv.className = 'hegemony-image';
+                const image = document.createElement('img');
+                image.src = content.right;
+                image.alt = "霸权围剿";
+
+                imageDiv.appendChild(image);
+                container.appendChild(textDiv);
+                container.appendChild(imageDiv);
+                contentTextElement.appendChild(container);
+            }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            // 导航图标点击事件
+            navIcons.forEach((icon, index) => {
+                icon.addEventListener('click', () => {
+                    currentIndex = index;
+                    updateCard(currentIndex);
+                });
+            });
+
+            // 上下箭头点击事件
+            upArrow.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+                updateCard(currentIndex);
+            });
+
+            downArrow.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % cards.length;
+                updateCard(currentIndex);
+            });
+
+            // 键盘事件
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowUp') {
+                    currentIndex = (currentIndex - 1 + cards.length) % cards.length;
+                    updateCard(currentIndex);
+                } else if (e.key === 'ArrowDown') {
+                    currentIndex = (currentIndex + 1) % cards.length;
+                    updateCard(currentIndex);
+                }
+            });
+
+            // 初始化第一个卡片
+            updateCard(0);
+            //卡片的结束
+
+
+
+
+
+
+            // 初始状态
+            let text1Active = false;
+            let text2Active = false;
+
+            // 滚动事件处理
+            function handleScroll() {
+                const scrollPosition = window.scrollY;
+                const windowHeight = window.innerHeight;
+
+                // 获取text2位置
+                const text2Rect = text2.getBoundingClientRect();
+
+                // 检查text1是否在视口中
+                if (scrollPosition < windowHeight) {
+                    if (!text1Active) {
+                        text1.classList.add('active');
+                        text1Active = true;
+                    }
+                } else {
+                    if (text1Active) {
+                        text1.classList.remove('active');
+                        text1Active = false;
+                    }
+                }
+
+                // 检查text2是否显示了一半
+                if (text2Rect.top <= windowHeight / 2 && text2Rect.bottom >= windowHeight / 2) {
+                    if (!text2Active) {
+                        text2.classList.add('active');
+                        text2Active = true;
+                    }
+                } else {
+                    if (text2Active) {
+                        text2.classList.remove('active');
+                        text2Active = false;
+                    }
+                }
+            }
+
+            // 初始化元素位置
+            function initElements() {
+                // 设置text2图片初始位置
+                text2Imgs[0].style.left = '-50%';
+                text2Imgs[0].style.top = '0';
+                text2Imgs[1].style.right = '-50%';
+                text2Imgs[1].style.bottom = '0';
+            }
+
+            // 初始化
+            initElements();
+            window.addEventListener('scroll', handleScroll);
+
+            // 触发一次滚动事件以初始化状态
+            handleScroll();
+        });
+
+
+        // 创建粒子效果
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+
+                // 随机位置
+                const left = Math.random() * 100;
+                const top = Math.random() * 100 + 100; // 从屏幕下方开始
+
+                // 随机大小
+                const size = Math.random() * 3 + 1;
+
+                // 随机动画延迟
+                const delay = Math.random() * 10;
+
+                // 随机动画持续时间
+                const duration = Math.random() * 10 + 5;
+
+                particle.style.left = `${left}%`;
+                particle.style.top = `${top}%`;
+                particle.style.width = `${size}px`;
+                particle.style.height = `${size}px`;
+                particle.style.animationDelay = `${delay}s`;
+                particle.style.animationDuration = `${duration}s`;
+
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+
+
+        // 背景hover效果
+        const loading = {
+            container: document.querySelector(".loading"),
+            in(target) {
+                this.container.classList.remove("loading_out");
+                setTimeout(() => {
+                    window.location.href = target;
+                }, 1000)
+            },
+            out() {
+                this.container.classList.add("loading_out");
+            }
+        };
+
+        // 页面加载完成后隐藏loading动画
+        window.addEventListener("load", () => {
+            loading.out();
+        });
+
+        // 滚动方向检测
+        let lastScrollTop = 0;
+        let isScrollingDown = false;
+
+        window.addEventListener('scroll', function () {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            // 判断滚动方向
+            if (scrollTop > lastScrollTop) {
+                isScrollingDown = true; // 向下滚动
+            } else {
+                isScrollingDown = false; // 向上滚动
+            }
+            lastScrollTop = scrollTop;
+
+            // 检查是否滚动到底部（向下滚动时）
+            if (isScrollingDown && (window.innerHeight + scrollTop) >= document.body.offsetHeight - 50) {
+                loading.in('./part4Breakthrough.html');
+            }
+
+            // 检查是否滚动到顶部（向上滚动时）
+            if (!isScrollingDown && scrollTop <= 50) {
+                loading.in('./part2Dawn.html');
+            }
+        });
+
+        // 背景网格交互效果
+        document.addEventListener('DOMContentLoaded', function () {
+            const gridBackground = document.getElementById('gridBackground');
+            const cellSize = 40; // 与CSS中保持一致
+            let activeCell = null;
+            let lastHoveredCell = null;
+
+            // 创建网格
+            function createGrid() {
+                const cols = Math.ceil(window.innerWidth / cellSize);
+                const rows = Math.ceil(window.innerHeight / cellSize);
+
+                for (let row = 0; row < rows; row++) {
+                    for (let col = 0; col < cols; col++) {
+                        const cell = document.createElement('div');
+                        cell.className = 'grid-cell';
+                        cell.style.left = `${col * cellSize}px`;
+                        cell.style.top = `${row * cellSize}px`;
+                        cell.dataset.row = row;
+                        cell.dataset.col = col;
+                        gridBackground.appendChild(cell);
+                    }
+                }
+            }
+
+            // 激活3x3区域
+            function activateArea(row, col) {
+                // 如果当前激活的单元格与上次相同，则不执行
+                if (lastHoveredCell && lastHoveredCell.dataset.row == row && lastHoveredCell.dataset.col == col) {
+                    return;
+                }
+
+                // 清除所有激活状态
+                document.querySelectorAll('.grid-cell.active').forEach(cell => {
+                    cell.classList.remove('active');
+                });
+
+                // 随机激活3x3区域内的部分单元格
+                for (let r = Math.max(0, row - 1); r <= Math.min(row + 1, Math.ceil(window.innerHeight / cellSize) - 1); r++) {
+                    for (let c = Math.max(0, col - 1); c <= Math.min(col + 1, Math.ceil(window.innerWidth / cellSize) - 1); c++) {
+                        // 随机决定是否激活该单元格
+                        if (Math.random() > 0.5) {
+                            const cell = document.querySelector(`.grid-cell[data-row="${r}"][data-col="${c}"]`);
+                            if (cell) {
+                                cell.classList.add('active');
+                            }
+                        }
+                    }
+                }
+
+                // 记录当前激活的单元格
+                lastHoveredCell = document.querySelector(`.grid-cell[data-row="${row}"][data-col="${col}"]`);
+            }
+
+            // 鼠标移动事件处理
+            function handleMouseMove(e) {
+                const x = e.clientX;
+                const y = e.clientY;
+
+                // 计算当前所在的单元格
+                const col = Math.floor(x / cellSize);
+                const row = Math.floor(y / cellSize);
+
+                // 激活3x3区域
+                activateArea(row, col);
+            }
+
+            // 初始化网格
+            createGrid();
+
+            // 监听鼠标移动事件
+            document.addEventListener('mousemove', handleMouseMove);
+
+            // 窗口大小改变时重新创建网格
+            window.addEventListener('resize', function () {
+                while (gridBackground.firstChild) {
+                    gridBackground.removeChild(gridBackground.firstChild);
+                }
+                createGrid();
+            });
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>科幻风格弹幕效果</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #0a0a1a;
+            overflow: hidden;
+        }
+
+        .barrage-container {
+            position: absolute;
+            width: 100%;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .barrage-item {
+            position: absolute;
+            white-space: nowrap;
+            color: #00f7ff;
+            /* 科幻蓝绿色 */
+            font-size: 24px;
+            font-family: 'Microsoft YaHei', sans-serif;
+            text-shadow: 0 0 5px rgba(0, 247, 255, 0.5);
+            opacity: 0.8;
+            will-change: transform;
+            animation: barrage-move linear infinite;
+        }
+
+        .barrage-item.highlight {
+            color: #00ff9d;
+            /* 高亮使用更亮的蓝绿色 */
+            font-weight: bold;
+            opacity: 1;
+            text-shadow: 0 0 15px #00ff9d;
+        }
+
+        @keyframes barrage-move {
+            0% {
+                transform: translateX(100vw);
+            }
+
+            100% {
+                transform: translateX(-100%);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="barrage-container" id="barrageContainer"></div>
+
+    <script>
+        // 弹幕数据
+        const barrageData = [
+            "光伏发电是清洁能源",
+            "光伏不会致癌",
+            "光伏扶贫成效显著",
+            "光伏效率已大幅提升",
+            "光伏成本下降95%",
+            "光伏不会破坏生态",
+            "中国光伏技术全球领先",
+            "光伏助力碳中和",
+            "光伏是未来能源主力",
+            "光伏+储能是趋势"
+        ];
+
+        // 初始化弹幕
+        function initBarrage() {
+            const container = document.getElementById('barrageContainer');
+
+            // 持续生成弹幕
+            setInterval(() => {
+                createBarrageItem(container);
+            }, 500);
+        }
+
+        // 创建单个弹幕
+        function createBarrageItem(container) {
+            const item = document.createElement('div');
+            item.className = 'barrage-item';
+
+            // 随机选择弹幕内容
+            const randomText = barrageData[Math.floor(Math.random() * barrageData.length)];
+
+            item.textContent = randomText;
+
+            // 随机位置和速度
+            const top = Math.random() * 90;
+            const duration = 10 + Math.random() * 20;
+            const fontSize = 20 + Math.random() * 20;
+
+            item.style.top = `${top}vh`;
+            item.style.fontSize = `${fontSize}px`;
+            item.style.animationDuration = `${duration}s`;
+
+            // 悬停效果
+            item.addEventListener('mouseenter', () => {
+                item.classList.add('highlight');
+                item.style.animationPlayState = 'paused';
+            });
+
+            item.addEventListener('mouseleave', () => {
+                item.classList.remove('highlight');
+                item.style.animationPlayState = 'running';
+            });
+
+            // 弹幕结束后移除
+            item.addEventListener('animationend', () => {
+                item.remove();
+            });
+
+            container.appendChild(item);
+        }
+
+        // 页面加载后启动弹幕
+        window.addEventListener('load', initBarrage);
+    </script>
+</body>
+
+</html>

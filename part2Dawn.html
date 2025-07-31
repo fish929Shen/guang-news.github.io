@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>曙光
+    </title>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/part2.css">
+    <link rel="stylesheet" href="./css/part2-game.css">
+    <!-- 引入Font Awesome图标库 -->
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+
+            height: 330vh;
+            width: 100%;
+        }
+
+        body {
+            background-color: var(--dark-bg);
+            color: white;
+            font-family: 'Rajdhani', 'Arial', sans-serif;
+            overflow-x: hidden;
+            position: relative;
+            text-align: center
+        }
+
+        /* 微妙的网格背景（降低存在感） */
+        body::before {
+            content: "";
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image:
+                linear-gradient(rgba(5, 217, 232, 0.05) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(5, 217, 232, 0.05) 1px, transparent 1px);
+            background-size: 60px 60px;
+            z-index: -2;
+            opacity: 0.5;
+        }
+
+        /* 辉光叠加层 */
+        .glow-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 30% 40%,
+                    rgba(103, 231, 208, 0.15) 0%,
+                    transparent 30%),
+                radial-gradient(circle at 70% 60%,
+                    rgba(96, 59, 189, 0.15) 0%,
+                    transparent 30%);
+            z-index: -1;
+            animation: glow-pulse 20s infinite alternate;
+            pointer-events: none;
+            /* 防止遮挡交互 */
+        }
+
+        /* 星星容器 - 全屏固定定位 */
+        #stars-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            /* 防止遮挡交互 */
+            z-index: -1;
+            /* 置于内容下方 */
+            overflow: hidden;
+        }
+
+        /* 星星基础样式 */
+        .star {
+            position: absolute;
+            border-radius: 50%;
+            background: white;
+            box-shadow: 0 0 10px 2px rgba(255, 255, 255, 0.8);
+            opacity: 0;
+            animation: twinkle 3s infinite alternate;
+        }
+
+        /* 关键帧动画 */
+        @keyframes glow-pulse {
+            0% {
+                opacity: 0.3;
+                transform: scale(0.95);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(1.05);
+            }
+
+            100% {
+                opacity: 0.3;
+                transform: scale(0.95);
+            }
+        }
+
+        @keyframes twinkle {
+
+            0%,
+            100% {
+                opacity: 0.2;
+                transform: scale(0.8);
+            }
+
+            50% {
+                opacity: 1;
+                transform: scale(1.2);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="logo-container">
+        <img src="img/logo.png" alt="网站Logo" class="logo" id="logo">
+        <div class="logo-menu">
+
+            <div class="menu-item"><a href="part1Embarkation.html">启程</a></div>
+            <div class="menu-item"><a href="part2Dawn.html"
+                    style="color: rgb(248, 232, 207);text-shadow: 0 0 8px rgba(255, 255, 255, 0.92)">曙光</a></div>
+            <div class="menu-item"><a href="part3Dilemma.html">困境</a></div>
+            <div class="menu-item"><a href="part4Breakthrough.html">突围</a></div>
+        </div>
+    </div>
+    <!-- 白场过渡 -->
+    <div class="loading"></div>
+    <!-- 正文 -->
+    <div class="content">
+        <!-- 头页 -->
+        <div class="head">
+            <img src="./img/2.png" alt="曙光">
+        </div>
+        <!-- 添加的文字内容 -->
+        <div class="text-animation-container">
+            <div class="text-wrapper">
+                <div class="cyber-text text-1" id="text1">
+                    <span
+                        style="color: #fff; text-shadow: 0 0 10px var(#fff), 0 0 20px var(--neon-purple);">[能源危机]</span>日益逼近，但在能源结构调整过程中，<br>中国目前已实现从以煤炭为主的能源结构到多元协同的转型突破。
+                </div>
+
+                <div class="cyber-text text-2" id="text2">
+                    经过光晟一行人的艰苦奋斗，他们离实现最终目标更近了一步，<br>曙光已在前方。
+                </div>
+
+            </div>
+            <div class="task-complete-modal" id="taskCompleteModal">
+                <div class="modal-content pulse-border">
+                    <div class="modal-grid-bg"></div>
+                    <div class="modal-header">
+                        <h2>任务完成通告：</h2>
+                    </div>
+                    <div class="modal-body">
+                        <p>[光伏长征·新阶段任务达成！]</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button class="cyber-button" onclick="location.hash='#game'">查看任务</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    </div>
+    <!-- 动态星星容器 -->
+    <div id="stars-container"></div>
+    <!-- 辉光背景层 -->
+    <div class="glow-overlay"></div>
+
+    <!-- 赛博风格任务完成通告提示框 -->
+
+    <!-- 主要内容容器 -->
+    <div class="container" id="game">
+        <div class="main-card">
+            <!-- 标题区域 -->
+            <header class="header title-decoration">
+                <h1>
+                    <span class="glow-text">光伏发展</span>
+                    <span class="neon-pink">目前成就</span>
+                </h1>
+                <p class="neon-pink">PHOTOVOLTAIC DEVELOPMENT ACHIEVEMENTS</p>
+            </header>
+
+            <!-- 修改导航栏部分 -->
+            <nav class="nav-container">
+                <div class="nav-buttons">
+                    <button class="tab-btn active" data-tab="tab1">
+                        <i class="fa fa-pie-chart"></i>
+                        <span>能源装机占比</span>
+                    </button>
+                    <button class="tab-btn" data-tab="tab2">
+                        <i class="fa fa-line-chart"></i>
+                        <span>光伏装机容量</span>
+                    </button>
+                    <button class="tab-btn" data-tab="tab3">
+                        <i class="fa fa-map-o"></i>
+                        <span>各省分布</span>
+                    </button>
+                    <button class="tab-btn" data-tab="tab4">
+                        <i class="fa fa-bolt"></i>
+                        <span>发电量</span>
+                    </button>
+                    <button class="tab-btn" data-tab="tab5">
+                        <i class="fa fa-percent"></i>
+                        <span>利用率</span>
+                    </button>
+                </div>
+            </nav>
+            <!-- 内容区域 -->
+            <div class="content-area">
+                <!-- 不同类型能源装机占比 -->
+                <div id="tab1" class="tab-content active">
+                    <div class="card-grid">
+                        <div class="stats-card text-card">
+                            <h2><i class="fa fa-bolt"></i>不同类型能源装机占比</h2>
+                            <div class="text-content">
+                                <p>
+                                    尽管火力发电依旧占主导地位，但中国新能源发展迅速，年均保持两位数的增长率。提前6年多完成中国在气候雄心大会上承诺的"到2030年中国风电、太阳能发电总装机容量达到12亿千瓦时以上"的目标。
+                                </p>
+                                <p>
+                                    在2024年新增装机总量中，光伏装机一骑绝尘，占比高达64.7%，稳居第一位。传统能源装机进一步收缩，火电新增装机占比降至12.6%。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="stats-card chart-card">
+                            <div id="visualization1" class="chart-container">
+                                <img src="./img/part2-char1.png" alt="能源装机占比图表">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 光伏装机容量 -->
+                <div id="tab2" class="tab-content">
+                    <div class="card-grid">
+                        <div class="stats-card text-card">
+                            <h2><i class="fa fa-sun-o"></i>光伏装机容量</h2>
+                            <div class="text-content">
+                                <p>
+                                    截至2024年底，中国光伏装机总容量突破8.4亿千瓦，与2013年相比，装机量增长180多倍，年均增长约60%，年新增和累计装机容量均位列全球第一。
+                                </p>
+                                <p>
+                                    2025年6月24日，中国光伏发电累计装机规模突破10亿千瓦，占中国总发电装机容量的比重达30%，推动新能源迈上新台阶。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="stats-card chart-card">
+                            <div id="visualization2" class="chart-container">
+                                <img src="./img/part2-char2.png" alt="光伏装机容量图表">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 各省光伏装机容量 -->
+                <div id="tab3" class="tab-content">
+                    <div class="card-grid">
+                        <div class="stats-card text-card">
+                            <h2><i class="fa fa-map-marker"></i>各省光伏装机容量</h2>
+                            <div class="text-content">
+                                <p>
+                                    从中国光伏区域发展看，在2024年各省新增装机容量中，新疆、内蒙、江苏三省增量显著，新增光伏规模均超过2000万千瓦，占总新增规模1/3。
+                                </p>
+                                <p>
+                                    呈现出"东部提质、中部扩容、西部提速"的鲜明特征。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="stats-card chart-card">
+                            <div id="visualization3" class="chart-container">
+                                <iframe src="./part2-chart3.html" frameborder="0"
+                                    style="width:100%; height:100%;"></iframe>
+                                <p style="font-size: smaller; color: rgba(240, 248, 255, 0.644);line-height: 3;">
+                                    鼠标放在地图上滚动滑轮可以放大地图</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 光伏装机发电量 -->
+                <div id="tab4" class="tab-content">
+                    <div class="card-grid">
+                        <div class="stats-card text-card">
+                            <h2><i class="fa fa-bolt"></i>光伏装机发电量</h2>
+                            <div class="text-content">
+                                <p>
+                                    2024年，中国太阳能发电量达到1800亿千瓦时，同比增长约20%，成为仅次于水电的第二大清洁能源发电来源。
+                                </p>
+                                <p>
+                                    如今10亿千瓦以上的光伏装机一年可发出1.2万亿千瓦时的绿色清洁电能，可直接替代1.52亿吨的原油进口（约占2024年原油进口量的18%），让中国向实现能源自主迈进，减少全球能源安全危机对我国的影响。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="stats-card chart-card">
+                            <div id="visualization4" class="chart-container">
+                                <iframe src="./part2-chart4.html" frameborder="0"
+                                    style="width:100%; height:100%;"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 光伏利用率 -->
+                <div id="tab5" class="tab-content">
+                    <div class="card-grid">
+                        <div class="stats-card text-card">
+                            <h2><i class="fa fa-line-chart"></i>光伏利用率</h2>
+                            <div class="text-content">
+                                <p>
+                                    中国光伏发电量不断增加，在全部发电量中的占比稳步提高，同时，光伏发电利用率平均保持在95%以上，处于世界一流水平，真正做到让光伏发的电造福于民。
+                                </p>
+                                <p>
+                                    2024年，中国光伏利用率达到96.8%，其中上海、浙江、福建、重庆、四个省的光伏利用率高达100%。
+                                </p>
+                            </div>
+                        </div>
+                        <div class="stats-card chart-card">
+                            <div id="visualization5" class="chart-container">
+                                <img src="./img/part2-char5.png" alt="光伏利用率图表">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 页脚 -->
+            <footer>
+                <div class="footer-content">
+                    <!-- 可以添加页脚内容 -->
+                </div>
+            </footer>
+        </div>
+    </div>
+
+
+
+
+
+    <script src="./js/part2-star-bg.js"></script>
+    <script src="./js/part2-game.js"></script>
+    <!-- 转场动画 -->
+    <script>
+        // 开头文字出现动画
+        // 滚动动画控制(文字+提示框)
+        function setupScrollAnimation() {
+            const text1 = document.getElementById('text1');
+            const text2 = document.getElementById('text2');
+            const container = document.querySelector('.text-animation-container');
+            const taskCompleteModal = document.getElementById('taskCompleteModal');
+
+            let text1Shown = false;
+            let text2Shown = false;
+            let taskModalShown = false;
+
+            function checkScroll() {
+                const rect = container.getBoundingClientRect();
+                const windowHeight = window.innerHeight;
+                const scrollPercent = window.scrollY / windowHeight;
+
+                // 当容器进入视口时
+                if (rect.top <= windowHeight * 0.8 && rect.bottom >= windowHeight * 0.2) {
+                    // 显示第一段文字
+                    if (!text1Shown && scrollPercent < 0.5) {
+                        text1.style.opacity = '1';
+                        text1.style.transform = 'translateY(0)';
+                        text1Shown = true;
+                    }
+
+                    // 当滚动超过50%时，第一段文字消失，第二段文字出现
+                    if (scrollPercent >= 0.7) {
+                        if (text1Shown) {
+                            text1.style.opacity = '0';
+                            text1.style.transform = 'translateY(-50px)';
+                        }
+
+                        if (!text2Shown) {
+                            text2.style.opacity = '1';
+                            text2.style.transform = 'translateY(0)';
+                            text2Shown = true;
+                        }
+                    }
+
+                    // 当滚动超过80%时，text2消失，显示任务完成通告
+                    if (scrollPercent >= 0.8 && !taskModalShown) {
+                        text2.style.opacity = '0';
+                        text2.style.transform = 'translateY(-50px)';
+                        taskCompleteModal.style.display = 'block';
+                        taskModalShown = true;
+                    }
+                }
+            }
+
+            window.addEventListener('scroll', checkScroll);
+            checkScroll(); // 初始检查
+        }
+
+        document.addEventListener('DOMContentLoaded', setupScrollAnimation);
+
+
+
+
+        // 翻页
+        const loading = {
+            container: document.querySelector(".loading"),
+            in(target) {
+                this.container.classList.remove("loading_out");
+                setTimeout(() => {
+                    window.location.href = target;
+                }, 1000)
+            },
+            out() {
+                this.container.classList.add("loading_out");
+            }
+        };
+
+        // 页面加载完成后隐藏loading动画
+        window.addEventListener("load", () => {
+            loading.out();
+
+        });
+
+        // 滚动方向检测
+        let lastScrollTop = 0;
+        let isScrollingDown = false;
+
+        window.addEventListener('scroll', function () {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            // 判断滚动方向
+            if (scrollTop > lastScrollTop) {
+                isScrollingDown = true; // 向下滚动
+            } else {
+                isScrollingDown = false; // 向上滚动
+            }
+            lastScrollTop = scrollTop;
+
+            // 检查是否滚动到底部（向下滚动时）
+            if (isScrollingDown && (window.innerHeight + scrollTop) >= document.body.offsetHeight - 50) {
+                loading.in('./part3Dilemma.html');
+            }
+
+            // 检查是否滚动到顶部（向上滚动时）
+            if (!isScrollingDown && scrollTop <= 50) {
+                loading.in('./part1Embarkation.html');
+            }
+        });
+
+
+
+
+        // 星星
+        function createStars() {
+            const container = document.getElementById('stars-container');
+            const starCount = 150; // 星星数量（可根据性能调整）
+
+            // 清空现有星星（防止重复生成）
+            container.innerHTML = '';
+
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+
+                // 随机属性
+                const size = Math.random() * 3 + 1; // 1-4px
+                const posX = Math.random() * 100;  // 0-100vw
+                const posY = Math.random() * 100;  // 0-100vh
+                const delay = Math.random() * 5;   // 0-5s
+                const duration = 2 + Math.random() * 3; // 2-5s
+
+                // 应用样式
+                star.style.cssText = `
+                    width: ${size}px;
+                    height: ${size}px;
+                    left: ${posX}vw;
+                    top: ${posY}vh;
+                    animation-delay: ${delay}s;
+                    animation-duration: ${duration}s;
+                `;
+
+                // 20%几率生成彩色星星
+                if (Math.random() > 0.8) {
+                    const colors = ['#67E7D0', '#603BBD', '#00ff9d'];
+                    const color = colors[Math.floor(Math.random() * 3)];
+                    star.style.background = color;
+                    star.style.boxShadow = `0 0 15px 3px ${color}`;
+                }
+
+                container.appendChild(star);
+            }
+        }
+
+        // 页面加载时生成星星
+        window.addEventListener('load', createStars);
+
+        // 视窗大小变化时重新生成（保持全屏效果）
+        window.addEventListener('resize', createStars);
+    </script>
+</body>
+
+</html>
