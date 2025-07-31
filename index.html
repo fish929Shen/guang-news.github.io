@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>光晟前言</title>
+    <link rel="stylesheet" href="./css/index.css">
+    <style>
+        body {
+            height: auto;
+            width: 100vw;
+
+        }
+
+        .part0-mugeda {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* z-index: 1; */
+            /* 确保在其他内容之上 */
+            overflow: hidden;
+            /* 裁剪溢出内容 */
+        }
+
+        .part0-mugeda iframe {
+            width: 150%;
+            /* 增加宽度以容纳放大内容 */
+            height: 150%;
+            /* 增加高度以容纳放大内容 */
+            border: none;
+            /* 移除iframe边框 */
+            transform: scale(1.1);
+            /* 放大1.2倍，可调整此值 */
+            transform-origin: center center;
+            /* 从中心放大 */
+            background-color: #000;
+            transform: scale(0.667);
+            /* 1/1.5，使放大的内容填充容器 */
+        }
+
+        /* 提示文本样式 */
+        .drag-hint {
+            position: fixed;
+            /* 固定在视口 */
+            right: 20px;
+            /* 距离右侧20px */
+            bottom: 20px;
+            /* 距离底部20px */
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            /* 调整为白色半透明，提高可见性 */
+
+            padding: 8px 12px;
+            /* 添加内边距 */
+            border-radius: 6px;
+            /* 圆角 */
+            z-index: 1000;
+            /* 确保显示在iframe上方 */
+            pointer-events: none;
+            /* 点击穿透，不阻挡iframe交互 */
+        }
+
+        @keyframes pulse-glow {
+
+            0%,
+            100% {
+                text-shadow:
+                    0 0 5px rgba(103, 231, 208, 0.8),
+                    0 0 10px rgba(103, 231, 208, 0.6),
+                    0 0 15px rgba(96, 59, 189, 0.4);
+            }
+
+            50% {
+                text-shadow:
+                    0 0 10px rgba(103, 231, 208, 0.9),
+                    0 0 20px rgba(103, 231, 208, 0.7),
+                    0 0 30px rgba(96, 59, 189, 0.5);
+            }
+        }
+
+        .drag-hint {
+            color: #ffffff;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* 桌面端（默认） */
+        .part0-mugeda iframe {
+            transform: scale(1.1);
+        }
+
+        /* 平板端（宽度小于992px） */
+        /* @media (max-width: 992px) {
+            .part0-mugeda iframe {
+                transform: scale(1.5);
+            }
+        } */
+
+        /* 手机端（宽度小于768px） */
+        /* @media (max-width: 768px) {
+            .part0-mugeda iframe {
+                transform: scale(1.7);
+            }
+        } */
+
+
+        /* 箭头提示样式 */
+        .arrow-hint {
+            position: fixed;
+            right: 40px;
+            bottom: 70px;
+            /* 调整位置在文字提示上方 */
+            width: 30px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            z-index: 1000;
+            pointer-events: none;
+        }
+
+        .arrow-up {
+            width: 20px;
+            height: 20px;
+            border-top: 3px solid rgba(255, 255, 255, 0.8);
+            border-right: 3px solid rgba(255, 255, 255, 0.8);
+            transform: rotate(-45deg);
+            animation: arrowMove 1.5s infinite ease-in-out;
+        }
+
+        /* 箭头向上移动动画 */
+        @keyframes arrowMove {
+            0% {
+                transform: translateY(0) rotate(-45deg);
+                opacity: 0.4;
+            }
+
+            50% {
+                transform: translateY(-15px) rotate(-45deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(0) rotate(-45deg);
+                opacity: 0.4;
+            }
+        }
+
+        /* 文字提示样式保持不变 */
+        .drag-hint {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 8px 12px;
+            border-radius: 6px;
+            z-index: 1000;
+            pointer-events: none;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+
+
+        /* 赛博朋克风格按钮 */
+        .cyberpunk-btn {
+
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+            /* 确保在iframe和提示之上 */
+            padding: 12px 24px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #67E7D0;
+            /* 霓虹蓝绿色 */
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 30px;
+        }
+
+        /* 按钮内发光效果 */
+        .cyberpunk-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            z-index: -1;
+            background: linear-gradient(45deg, #67E7D0, #603BBD);
+            opacity: 0.7;
+            background-size: 200% 200%;
+            animation: gradientMove 12s ease infinite;
+            border-radius: 2px;
+        }
+
+        /* 按钮文字发光 */
+        .cyberpunk-btn span {
+            position: relative;
+            z-index: 1;
+            text-shadow:
+                0 0 5px rgba(103, 231, 208, 0.8),
+                0 0 10px rgba(103, 231, 208, 0.6);
+        }
+
+        /* 按钮悬停效果 */
+        .cyberpunk-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .cyberpunk-btn:hover span {
+            text-shadow:
+                0 0 8px rgba(103, 231, 208, 0.9),
+                0 0 16px rgba(103, 231, 208, 0.7);
+        }
+
+        /* 按钮边框动画 */
+        .cyberpunk-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(103, 231, 208, 0.5);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .cyberpunk-btn:hover::after {
+            border-color: rgba(103, 231, 208, 0.8);
+            box-shadow: 0 0 10px rgba(103, 231, 208, 0.5);
+        }
+
+        /* 渐变动画 */
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        /* 提示文本样式 */
+        .drag-hint {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.8);
+            padding: 8px 12px;
+            border-radius: 6px;
+            z-index: 1000;
+            pointer-events: none;
+            animation: pulse-glow 2s ease-in-out infinite;
+        }
+
+        /* 页面过渡遮罩 */
+        .page-transition {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #000;
+            z-index: 9999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+        }
+
+        .page-transition.active {
+            opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 页面过渡遮罩 -->
+    <div class="page-transition"></div>
+    <!-- 白场过渡 -->
+    <div class="loading">
+    </div>
+    <!-- 赛博朋克风格按钮 -->
+    <button class="cyberpunk-btn" id="exploreBtn">
+        <span>开启探索</span>
+    </button>
+
+    <div class="part0-mugeda">
+        <iframe src="./mugeda-part0/index.html" frameborder="0"></iframe>
+    </div>
+    <!-- 箭头提示 -->
+    <div class="arrow-hint">
+        <div class="arrow-up"></div>
+    </div>
+    <p class="drag-hint">按住鼠标左键向上拖动</p>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="script.js"></script>
+    <script>
+
+        const loading = {
+            container: document.querySelector(".loading"),
+            in(target) {
+                this.container.classList.remove("loading_out");
+                setTimeout(() => {
+                    window.location.href = target;
+                }, 1000);
+            },
+            out() {
+                this.container.classList.add("loading_out");
+            }
+        };
+
+        // 页面加载完成后隐藏loading动画
+        window.addEventListener("load", () => {
+            loading.out();
+        });
+
+        // 滚动到底部检测
+        window.addEventListener('scroll', function () {
+            if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 50) {
+                loading.in('./part1Embarkation.html');
+            }
+        });
+
+        // 按钮跳转逻辑
+        const exploreBtn = document.getElementById('exploreBtn');
+        const transition = document.querySelector('.page-transition');
+
+        exploreBtn.addEventListener('click', () => {
+            // 显示过渡遮罩
+            transition.classList.add('active');
+
+            // 遮罩动画完成后跳转
+            setTimeout(() => {
+                window.location.href = './part1Embarkation.html';
+            }, 800); // 与CSS过渡时间一致
+        });
+    </script>
+</body>
+
+</html>
