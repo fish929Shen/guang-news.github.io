@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>启程</title>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lenis@1.3.4/dist/lenis.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700&display=swap');
+
+        body {
+
+            width: 100%;
+        }
+
+        .mugeda-animate {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            /* 隐藏iframe放大后超出容器的部分 */
+            /* 初始透明度为0 */
+            opacity: 0;
+            /* 添加过渡动画（淡入 + 微小位移增强效果） */
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            /* 初始略微下移，增强入场感 */
+            transform: translateY(30px);
+        }
+
+        /* 元素进入屏幕一半时的激活状态 */
+        .mugeda-animate.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .part2-mugeda-container {
+            position: relative;
+            /* 作为提示文本的定位容器 */
+            width: 100%;
+            height: 100%;
+        }
+
+        .part2-mugeda-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            /* 移除iframe默认边框 */
+            transform: scale(1.1);
+            /* 整体放大1.1倍 */
+            transform-origin: center center;
+            /* 从中心位置放大 */
+        }
+
+        .drag-hint {
+            position: absolute;
+            /* 相对于容器定位 */
+            right: 20px;
+            /* 距离右侧20px */
+            bottom: 20px;
+            /* 距离底部20px */
+            margin: 0;
+            /* 清除默认margin */
+            font-size: 2rem;
+            color: rgb(255, 255, 255);
+            /* 半透明白色，适配深色背景 */
+
+            padding: 8px 12px;
+            border-radius: 4px;
+            z-index: 10;
+            /* 确保显示在iframe上方 */
+            pointer-events: none;
+            /* 点击穿透，不影响iframe交互 */
+        }
+
+        /* 可选：添加文字发光效果，增强赛博朋克风格 */
+        .drag-hint {
+            text-shadow: 0 0 5px rgba(23, 46, 42, 0.8),
+                0 0 10px rgba(57, 92, 85, 0.5);
+        }
+
+
+        /* 箭头容器样式 */
+        .arrow-container {
+            position: absolute;
+            right: 60px;
+            /* 与文字提示右对齐 */
+            bottom: 80px;
+            /* 位于文字上方 */
+            z-index: 10;
+            /* 确保在iframe上方 */
+            pointer-events: none;
+            /* 不影响鼠标交互 */
+        }
+
+        /* 箭头样式 */
+        .up-arrow {
+            width: 40px;
+            height: 40px;
+            border-top: 2px solid rgba(103, 231, 208, 0.9);
+            /* 霓虹蓝绿色 */
+            border-right: 2px solid rgba(103, 231, 208, 0.9);
+            transform: rotate(-45deg);
+            /* 向上箭头 */
+            animation: arrowFloat 1.5s infinite ease-in-out;
+            /* 无限循环动画 */
+            box-shadow: 0 0 8px rgba(103, 231, 208, 0.6);
+            /* 箭头发光效果 */
+        }
+
+        /* 箭头动画：上下浮动 + 透明度变化 */
+        @keyframes arrowFloat {
+            0% {
+                transform: rotate(-45deg) translateY(0);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: rotate(-45deg) translateY(-10px);
+                /* 向上浮动10px */
+                opacity: 1;
+                box-shadow: 0 0 12px rgba(103, 231, 208, 0.8);
+                /* 发光增强 */
+            }
+
+            100% {
+                transform: rotate(-45deg) translateY(0);
+                opacity: 0.6;
+            }
+        }
+
+        /* 原有样式保持不变，以下为关键部分 */
+        .drag-hint {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            /* 其他属性不变... */
+        }
+
+
+
+        .develope-animate-text {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* 垂直居中内容 */
+        }
+
+        .story-in-text {
+            opacity: 1;
+            font-size: 2rem;
+            line-height: 2;
+            margin-bottom: 20px;
+            /* 增加底部外边距，使按钮与文本有间隔 */
+        }
+
+        .mugeda-animate {
+            height: 100vh;
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: translateY(30px);
+        }
+
+        .mugeda-animate.animate-in {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .part2-mugeda-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+        }
+
+        .part2-mugeda-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            transform: scale(1.1);
+            transform-origin: center center;
+        }
+
+        .drag-hint {
+            position: absolute;
+            right: 20px;
+            bottom: 20px;
+            margin: 0;
+            font-size: 2rem;
+            color: rgb(255, 255, 255);
+            padding: 8px 12px;
+            border-radius: 4px;
+            z-index: 10;
+            pointer-events: none;
+            text-shadow: 0 0 5px rgba(23, 46, 42, 0.8),
+                0 0 10px rgba(57, 92, 85, 0.5);
+        }
+
+        .arrow-container {
+            position: absolute;
+            right: 60px;
+            bottom: 80px;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        .up-arrow {
+            width: 40px;
+            height: 40px;
+            border-top: 2px solid rgba(103, 231, 208, 0.9);
+            border-right: 2px solid rgba(103, 231, 208, 0.9);
+            transform: rotate(-45deg);
+            animation: arrowFloat 1.5s infinite ease-in-out;
+            box-shadow: 0 0 8px rgba(103, 231, 208, 0.6);
+        }
+
+        @keyframes arrowFloat {
+            0% {
+                transform: rotate(-45deg) translateY(0);
+                opacity: 0.6;
+            }
+
+            50% {
+                transform: rotate(-45deg) translateY(-10px);
+                opacity: 1;
+                box-shadow: 0 0 12px rgba(103, 231, 208, 0.8);
+            }
+
+            100% {
+                transform: rotate(-45deg) translateY(0);
+                opacity: 0.6;
+            }
+        }
+
+        .cyberpunk-btn {
+            display: block;
+            position: relative;
+            width: 200px;
+            z-index: 1001;
+            padding: 12px 24px;
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.2rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #67E7D0;
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 30px;
+        }
+
+        .cyberpunk-btn::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            z-index: -1;
+            background: linear-gradient(45deg, #67E7D0, #603BBD);
+            opacity: 0.7;
+            background-size: 200% 200%;
+            animation: gradientMove 12s ease infinite;
+            border-radius: 2px;
+        }
+
+        .cyberpunk-btn span {
+            position: relative;
+            z-index: 1;
+            text-shadow:
+                0 0 5px rgba(103, 231, 208, 0.8),
+                0 0 10px rgba(103, 231, 208, 0.6);
+        }
+
+        .cyberpunk-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .cyberpunk-btn:hover span {
+            text-shadow:
+                0 0 8px rgba(103, 231, 208, 0.9),
+                0 0 16px rgba(103, 231, 208, 0.7);
+        }
+
+        .cyberpunk-btn::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 1px solid rgba(103, 231, 208, 0.5);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        .cyberpunk-btn:hover::after {
+            border-color: rgba(103, 231, 208, 0.8);
+            box-shadow: 0 0 10px rgba(103, 231, 208, 0.5);
+        }
+
+        @keyframes gradientMove {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="./css/index.css">
+    <link rel="stylesheet" href="./css/part1_comment.css">
+    <link rel="stylesheet" href="./css/part1_story-in.css">
+    <link rel="stylesheet" href="./css/part1_3Dcards.css">
+    <link rel="stylesheet" href="./css/part1_scroll-card.css">
+
+</head>
+
+<body>
+    <!-- 导航栏 -->
+    <div class="logo-container">
+        <img src="img/logo.png" alt="网站Logo" class="logo" id="logo">
+        <div class="logo-menu">
+            <div class="menu-item"><a href="part1Embarkation.html"
+                    style="color: rgb(248, 232, 207);text-shadow: 0 0 8px rgba(255, 255, 255, 0.92)">启程</a></div>
+            <div class="menu-item"><a href="part2Dawn.html">曙光</a></div>
+            <div class="menu-item"><a href="part3Dilemma.html">困境</a></div>
+            <div class="menu-item"><a href="part4Breakthrough.html">突围</a></div>
+        </div>
+    </div>
+    <!-- 加载页 -->
+    <div class="loading">
+    </div>
+    <!-- 正文 -->
+    <div class="content">
+        <!-- 头页 -->
+        <div class="head">
+            <img src="./img/1.png" alt="启程">
+        </div>
+        <!-- 木疙瘩青海马帮动画 -->
+        <div class="mugeda-animate">
+            <div class="part2-mugeda-container">
+                <iframe src="./mugeda-part1-1/index.html" frameborder="0"></iframe>
+                <div class="arrow-container">
+                    <div class="up-arrow"></div>
+                </div>
+                <p class="drag-hint">按住鼠标左键向上拖动</p>
+            </div>
+
+        </div>
+        <!-- 光伏评论 -->
+        <div class="container" style="margin-top: 80px;">
+            <div class="comments-container">
+                <div class="comment">
+                    <div class="comment-highlight" style="animation-delay: 0.5s;"></div>
+                    <div class="comment-corner comment-corner-tl"></div>
+                    <div class="comment-corner comment-corner-tr"></div>
+                    <div class="comment-corner comment-corner-bl"></div>
+                    <div class="comment-corner comment-corner-br"></div>
+
+                    <div class="comment-content">
+                        十年前，生产一瓦组件需要消耗1.2度电；现如今依靠光伏，只需要0.4度电就可以完成。这是巨大的科技进步，也是超乎想象的能耗降幅。
+                    </div>
+                    <div class="comment-author">——李振国</div>
+                    <!-- 光带 -->
+                    <div class="stats-bar"></div>
+                    <!-- 太阳能板 -->
+                    <div class="solar-panel" style="top: -20px; right: -40px;"></div>
+                    <p class="comment-graph">光伏巨头隆基绿能创始人李振国出席第十六届新领军者年会表示中国光伏正在以技术创新与低碳实践引领全球绿色发展。</p>
+                </div>
+
+                <div class="comment">
+                    <div class="comment-highlight" style="animation-delay: 2s;"></div>
+                    <div class="comment-corner comment-corner-tl"></div>
+                    <div class="comment-corner comment-corner-tr"></div>
+                    <div class="comment-corner comment-corner-bl"></div>
+                    <div class="comment-corner comment-corner-br"></div>
+
+                    <div class="comment-content">
+                        我感觉咱们这个太阳能发电设备比固定式的发电量高，而且它是旋转的，不用扫土，不用扫雪，刮风下雨都不怕，这个设备的太阳能板使用一根铁柱支撑，安装到哪儿都不占空间，不影响咱们老百姓晒粮食，挺好的。
+                    </div>
+                    <div class="comment-author">——金秀理</div>
+                    <div class="stats-bar"></div>
+                    <div class="solar-panel" style="bottom: -20px; left: -40px;"></div>
+                    <p class="comment-graph">
+                        河北省平山县三汲乡穆家庄村民金秀理在接受记者采访时表示。
+                    </p>
+                </div>
+
+                <div class="comment">
+                    <div class="comment-highlight" style="animation-delay: 3.5s;"></div>
+                    <div class="comment-corner comment-corner-tl"></div>
+                    <div class="comment-corner comment-corner-tr"></div>
+                    <div class="comment-corner comment-corner-bl"></div>
+                    <div class="comment-corner comment-corner-br"></div>
+
+                    <div class="comment-content">
+                        光伏产业是战略性新兴产业，发展光伏产业对调整产业结构，推进能源生产和消费方式变革，促进生态文明建设具有重要意义。
+                    </div>
+                    <div class="comment-author">——习近平</div>
+                    <div class="stats-bar"></div>
+                    <div class="solar-panel" style="top: 50%; left: -40px;"></div>
+                    <p class="comment-graph">
+                        国家主席习近平同志曾12次对“双碳”作出过指示。
+                    </p>
+                </div>
+
+                <div class="comment">
+                    <div class="comment-highlight" style="animation-delay: 5s;"></div>
+                    <div class="comment-corner comment-corner-tl"></div>
+                    <div class="comment-corner comment-corner-tr"></div>
+                    <div class="comment-corner comment-corner-bl"></div>
+                    <div class="comment-corner comment-corner-br"></div>
+
+                    <div class="comment-content">
+                        中国光伏是中国给予全人类的巨大礼物，将美好带给这个世界，没有哪个国家像中国，在这一发展中发挥了如此重要的作用，这是对世界的巨大贡献！
+                    </div>
+                    <div class="comment-author">——埃里克·索尔海姆</div>
+                    <div class="stats-bar"></div>
+                    <div class="solar-panel" style="top: 30%; right: -40px;"></div>
+                    <p class="comment-graph">
+                        联合国前秘书长、“一带一路”绿色发展国际联盟主席埃里克·索尔海姆在成都出席2024第七届中国国际光伏与储能产业大会上表示。
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div class="story-in">
+            <p class="story-in-text" style="height: 100vh;">每路过一个村庄，光晟就能听到当地人讨论光伏的传奇故事。</p>
+            <!-- 光伏属性3D翻转卡片 -->
+            <div class="card">
+                <!-- 游戏状态栏 -->
+                <div class="status-bar">
+                    <div class="status-item">
+                        <div class="status-icon"></div>
+                        <span>SYSTEM ONLINE</span>
+                    </div>
+                    <div class="status-item">
+                        <span>ENERGY LEVEL</span>
+                        <div class="battery"></div>
+                    </div>
+                    <div class="status-item">
+                        <span id="current-time">00:00:00</span>
+                    </div>
+                </div>
+                <!-- 3D卡片 -->
+                <div class="container-group">
+                    <!-- 第一个容器 -->
+                    <div class="main-container">
+                        <!-- 左侧内容 -->
+                        <div class="left-container">
+                            <div class="top-section">
+                                <div class="number-box">1</div>
+                            </div>
+
+                            <div class="middle-section">
+                                <div class="content-text">
+                                    <p>在杭州三江生态公司污水处理厂，阳光照耀下的光伏板熠熠生辉，正源源不断地将太阳能转化为清洁电力。该项目年发电量预计可达160万千瓦时，相当于节约标准煤约196.55吨。
+                                    </p>
+                                    <p>此外，项目投运后，节能减排效益十分亮眼。年均可实现二氧化碳减排约929.6吨，相当于约5.2万棵树木的年固碳贡献。</p>
+                                </div>
+                            </div>
+
+                            <div class="bottom-section">
+                                <span class="click-text">点击查看光伏优势</span>
+                                <span class="arrow">→</span>
+                            </div>
+                        </div>
+
+                        <!-- 右侧3D卡片 -->
+                        <div class="right-container">
+                            <div class="flip-card">
+                                <div class="flip-card-front">
+                                    <img src="./img/card1.jpg" alt="光伏发电系统">
+                                </div>
+                                <div class="flip-card-back">
+                                    <h2>低碳环保</h2>
+                                    <p>光伏发电通过半导体材料直接将太阳能转化为电能，全程无需燃烧化石燃料，彻底摆脱了传统能源的污染枷锁。</p>
+                                    <p>数据显示，每千瓦光伏系统年均减少二氧化碳排放约1吨，相当于为地球增种50棵树木。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第二个容器 -->
+                    <div class="main-container">
+                        <!-- 左侧内容 -->
+                        <div class="left-container">
+                            <div class="top-section">
+                                <div class="number-box">2</div>
+                            </div>
+
+                            <div class="middle-section">
+                                <div class="content-text">
+                                    <p>江西省余干县的凤凰村是一个人口多土地少的小村子。在这里，人均耕地面积不足0.5亩，客观上限制了凤凰村发展农业特色产业，也造成了村集体经济相对薄弱情况。</p>
+                                    <p>后来在中国信保挂职干部和驻村第一书记的带领下，该村开始发展屋顶光伏产业建设。2022年，建成总价值385万、规模超过1兆瓦的光伏电站，建成一年后村集体经济收益将达30万元以上。
+                                    </p>
+                                </div>
+                            </div>
+
+                            <div class="bottom-section">
+                                <span class="click-text">点击查看光伏优势</span>
+                                <span class="arrow">→</span>
+                            </div>
+                        </div>
+
+                        <!-- 右侧3D卡片 -->
+                        <div class="right-container">
+                            <div class="flip-card">
+                                <div class="flip-card-front">
+                                    <img src="./img/card2.jpg" alt="农村光伏项目">
+                                </div>
+                                <div class="flip-card-back">
+                                    <h2>改善民生</h2>
+                                    <p>光伏脱贫是实施精准脱贫的重要举措，是造福贫困地区、贫困群众的民生工程。光伏既能满足贫困地区的用电需求，更能为带来经济效益，使村民增收致富。</p>
+                                    <p>同时，随着技术的不断进步，光伏产业对劳动力的需求增加，为贫困地区创造更多就业机会。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第三个容器 -->
+                    <div class="main-container">
+                        <!-- 左侧内容 -->
+                        <div class="left-container">
+                            <div class="top-section">
+                                <div class="number-box">3</div>
+                            </div>
+
+                            <div class="middle-section">
+                                <div class="content-text">
+                                    <p>中国能建葛洲坝海外投资有限公司在乌兹别克斯坦投资建设的光伏项目一期实现并网发电。项目并网后，预计每年发电24亿千瓦时，约减少天然气年消耗5.88亿立方米，有效缓解当地电力短缺状况。
+                                    </p>
+                                    <p>此外，项目还提供了约1600个属地化就业岗位，预计将为当地带来1.4亿美元的税收收入。</p>
+                                </div>
+                            </div>
+
+                            <div class="bottom-section">
+                                <span class="click-text">点击查看光伏优势</span>
+                                <span class="arrow">→</span>
+                            </div>
+                        </div>
+
+                        <!-- 右侧3D卡片 -->
+                        <div class="right-container">
+                            <div class="flip-card">
+                                <div class="flip-card-front">
+                                    <img src="./img/card3.jpg" alt="国际光伏项目">
+                                </div>
+                                <div class="flip-card-back">
+                                    <h2>国际贡献</h2>
+                                    <p>中国作为全球光伏产业的领军者，始终秉持"共商、共建、共享"的理念，通过"一带一路"倡议，将先进的光伏技术、成熟的产业经验以及可持续的能源解决方案带给沿线国家，助力他们实现能源转型与绿色发展。
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 第四个容器 -->
+                    <div class="main-container">
+                        <!-- 左侧内容 -->
+                        <div class="left-container">
+                            <div class="top-section">
+                                <div class="number-box">4</div>
+                            </div>
+
+                            <div class="middle-section">
+                                <div class="content-text">
+                                    <p>习近平总书记曾提出："要牢牢把握高质量发展这个首要任务，因地制宜发展新质生产力改造提升传统产业，培育壮大新兴产业，布局建设未来产业，完善现代化产业体系。"</p>
+                                </div>
+                            </div>
+
+                            <div class="bottom-section">
+                                <span class="click-text">点击查看光伏优势</span>
+                                <span class="arrow">→</span>
+                            </div>
+                        </div>
+
+                        <!-- 右侧3D卡片 -->
+                        <div class="right-container">
+                            <div class="flip-card">
+                                <div class="flip-card-front">
+                                    <img src="./img/card4.jpg" alt="光伏产业">
+                                </div>
+                                <div class="flip-card-back">
+                                    <h2>新质生产力</h2>
+                                    <p>新质生产力是适应于社会新需求的生产力，光伏即是在新的社会需求下崛起的行业新质态，成为能源产业的质态维度跃迁的重要推动力。</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- 滑动卡片 -->
+                <div class="cardsbox_card_wapper">
+                    <div class="cardsbox_card_container">
+                        <div class="cardsbox">
+                            <div class="cardsbox_card" style="width: 100vw; flex-direction: column;">
+                                <p style="color: rgb(255, 255, 255); animation: pulsate 2s infinite alternate;">
+                                    点击查看光伏属性卡→</p>
+                                <p style="color: rgba(255, 255, 255, 0.792);font-size: 2rem;">向下滑动</p>
+                            </div>
+                            <!-- 第一个翻转卡片 -->
+                            <div class="scroll-flip-card">
+                                <div class="scroll-flip-card-inner">
+                                    <div class="scroll-flip-card-front"
+                                        style="background-image: url('https://source.unsplash.com/random/800x600/?solar,rooftop')">
+                                        <div class="scroll-card-overlay"></div>
+                                        <div class="scroll-card-content">
+                                            <p>丽江地处低纬高原，年均日照时间超过<span
+                                                    class="highlight">2500小时</span>，<br>是天然的光伏资源富集区。<br>在这里，有一家民宿引入了屋顶光伏系统，<br>运行一年后，电费年支出从<span
+                                                    class="highlight">16万元</span>降至<span
+                                                    class="highlight">4万元</span>，<br>累计节省达<span
+                                                    class="highlight">12万元</span>，且系统成本仅需<span
+                                                    class="highlight">3年</span>即可收回。</p>
+                                        </div>
+                                    </div>
+                                    <div class="scroll-flip-card-back">
+                                        <div class="scroll-back-content">
+                                            <h3>经济实惠</h3>
+                                            <div class="scroll-back-text">
+
+                                                <p>光伏发电能为用户带来显著的经济效益。<br>🏠
+                                                    <strong
+                                                        style="text-shadow: 0 0 3px #fff;">对于普通家庭而言</strong>，安装分布式光伏不仅能满足自家的日常用电需求，还能将多余的电量卖给电网，获得额外收入。<br>🏭<strong
+                                                        style="text-shadow: 0 0 3px #fff;">对于企业而言</strong>，利用光伏发电，可节省大量电费成本。
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 第二个翻转卡片 -->
+                            <div class="scroll-flip-card">
+                                <div class="scroll-flip-card-inner">
+                                    <div class="scroll-flip-card-front"
+                                        style="background-image: url('https://source.unsplash.com/random/800x600/?sun,energy')">
+                                        <div class="scroll-card-overlay"></div>
+                                        <div class="scroll-card-content">
+                                            <p>中国科学技术大学教授<span
+                                                    class="highlight">徐集贤</span>教授坦言：<br>"地球可再生能源有太阳能、水力、地热、风能、海洋能、生物能源等。<span
+                                                    class="highlight">其中能够满足15太瓦净零碳能源的，只有太阳能，没有之一。</span>如果把地球上一个小时接受的太阳能量聚集起来，就已经足够人类使用一年。"
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="scroll-flip-card-back">
+                                        <div class="scroll-back-content">
+                                            <h3>可利用量巨大</h3>
+                                            <div class="scroll-back-text">
+                                                <p>一年内到达地球表面的太阳能总量折合标准煤共约<strong
+                                                        style="text-shadow: 0 0 5px #fff;">1.892x1013千亿吨</strong>，是目前世界主要能源探明储量的<strong
+                                                        style="text-shadow: 0 0 5px #fff;">一万倍</strong>。<br>太阳的寿命至少尚有<strong
+                                                        style="text-shadow: 0 0 5px #fff;">40亿年</strong>，相对于人类历史来说，太阳能可源源不断供给地球的时间可以说是无限的。
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- 第三个翻转卡片 -->
+                            <div class="scroll-flip-card">
+                                <div class="scroll-flip-card-inner">
+                                    <div class="scroll-flip-card-front"
+                                        style="background-image: url('https://source.unsplash.com/random/800x600/?technology,solarpanel')">
+                                        <div class="scroll-card-overlay"></div>
+                                        <div class="scroll-card-content">
+                                            <p>光伏巨头隆基绿色能源科技有限公司董事长<span
+                                                    class="highlight">李振国</span><br>在2025新领军者年会上表示：<br>"十年前，我们光伏的转换效率只有<span
+                                                    class="highlight">15%</span>，<br>今天是<span
+                                                    class="highlight">25%</span>这种水平，我们要努力，<br>再过十年，把它做到<span
+                                                    class="highlight">35%</span>这种水平。"
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="scroll-flip-card-back">
+                                        <div class="scroll-back-content">
+                                            <h3>转换率高</h3>
+                                            <div class="scroll-back-text">
+                                                <p>
+                                                    从能量转换环节来看，太阳能光伏发电直接将太阳辐射能转换为电能。<br>在所有可再生能源利用中，太阳能光伏发电的转换环节最少、利用最直接。
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 40年发展历程动画 -->
+        <div class="story-in" style="background-image: none;">
+            <div class="develope-animate-text"
+                style="height: 100vh;display: flex;flex-direction: column;align-items: center;">
+                <div class="story-in-text" style="opacity: 1; font-size: 2rem; line-height:2;">
+                    从无人问津的冷门赛道到创新频出的价值热土，从核心技术受制于人到出口份额全球领先，<br>中国光伏的逆袭之路，走了整整四十年。</div>
+                <button class="cyberpunk-btn" id="exploreBtn">
+                    <span style="display: block;">开启探索</span>
+                </button>
+            </div>
+
+            <!-- 视频容器：添加控制逻辑 -->
+            <div id="part1-animate" class="develope-animate"
+                style="height: 100vh;display: flex;flex-direction: column;align-items: center;">
+                <!-- 移除autoplay，添加controls允许进度控制 -->
+                <video id="historyVideo" src="./part1-animate.mp4" muted loop controls
+                    style="height: auto; width: 100vw; max-height: 100vh;"></video>
+            </div>
+            <div style="height: 50vh;"></div>
+        </div>
+
+    </div>
+    <script src="script.js"></script>
+    <script src="./js/part1.js"></script>
+    <script src="./js/part1_3D-card.js"></script>
+    <!-- <script src="./js/part1_scroll-card.js"></script> -->
+    <script>
+
+
+
+
+
+
+
+
+
+        // 监听滚动事件
+        window.addEventListener('scroll', checkInView);
+
+        // 页面加载时先检查一次（避免初始位置已满足条件但未触发）
+        window.addEventListener('load', checkInView);
+
+        function checkInView() {
+            const target = document.querySelector('.mugeda-animate');
+            if (!target) return;
+
+            // 获取元素位置信息
+            const rect = target.getBoundingClientRect();
+            const windowHeight = window.innerHeight;
+
+            // 计算元素进入屏幕的比例：元素顶部到屏幕底部的距离 / 元素总高度
+            // 当比例 <= 0.5 时，说明元素至少一半进入屏幕
+            const visibleRatio = (windowHeight - rect.top) / rect.height;
+
+            // 触发条件：元素一半进入屏幕
+            if (visibleRatio >= 0.5) {
+                target.classList.add('animate-in');
+                // 动画触发后移除监听（避免重复触发）
+                window.removeEventListener('scroll', checkInView);
+            }
+        }
+
+
+
+
+        // 横向滑动
+        const lenis = new Lenis({
+            duration: 1,
+            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            smoothWheel: true,
+            autoRaf: true,
+        });
+        const scrollbox = {
+            wapper: document.querySelector(".cardsbox_card_wapper"),
+            cardsbox: document.querySelector(".cardsbox"),
+            distance: 0,
+            if_leave: false,
+            init() {
+                this.resize();
+                window.addEventListener("resize", this.resize.bind(this));
+                this.create_scrolltrigger();
+            },
+            create_scrolltrigger() {
+                ScrollTrigger.create({
+                    trigger: this.wapper,
+                    start: "top top",
+                    end: "bottom bottom",
+                    pin: true,             // 关键点：固定容器
+                    onUpdate: (self) => {
+                        this.cardsbox.style.transform = `translateX(-${self.progress * this.distance}px)`;
+                    },
+                    onLeave: () => {
+                        this.if_leave = true;
+                    },
+                    onEnterBack: () => {
+                        this.if_leave = false;
+                    }
+                });
+            },
+            resize() {
+                this.distance = this.cardsbox.offsetWidth - innerWidth;
+                this.wapper.style.height = `${this.distance}px`;
+                if (this.if_leave) this.cardsbox.style.transform = `translateX(-${this.distance}px)`;
+            }
+        };
+        scrollbox.init();
+
+        // 页面切换
+        const loading = {
+            container: document.querySelector(".loading"),
+            in(target) {
+                this.container.classList.remove("loading_out");
+                setTimeout(() => {
+                    window.location.href = target;
+                }, 1000)
+            },
+            out() {
+                this.container.classList.add("loading_out");
+            }
+        };
+
+        // 页面加载完成后隐藏loading动画
+        window.addEventListener("load", () => {
+            loading.out();
+        });
+
+        // 滚动方向检测
+        let lastScrollTop = 0;
+        let isScrollingDown = false;
+
+        window.addEventListener('scroll', function () {
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+            // 判断滚动方向
+            if (scrollTop > lastScrollTop) {
+                isScrollingDown = true; // 向下滚动
+            } else {
+                isScrollingDown = false; // 向上滚动
+            }
+            lastScrollTop = scrollTop;
+
+            // 检查是否滚动到底部（向下滚动时）
+            if (isScrollingDown && (window.innerHeight + scrollTop) >= document.body.offsetHeight - 50) {
+                loading.in('./part2Dawn.html');
+            }
+
+            // 检查是否滚动到顶部（向上滚动时）
+            if (!isScrollingDown && scrollTop <= 50) {
+                loading.in('./part0.html');
+            }
+        });
+
+
+        // 按钮跳转逻辑
+        const exploreBtn = document.getElementById('exploreBtn');
+
+
+        exploreBtn.addEventListener('click', () => {
+            const targetElement = document.getElementById('part1-animate');
+            if (targetElement) {
+                // 平滑滚动到目标元素
+                targetElement.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
